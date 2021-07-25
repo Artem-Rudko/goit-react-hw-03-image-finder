@@ -4,6 +4,8 @@ import Modal from './components/Modal';
 import ImageGallery from './components/ImageGallery';
 import Button from './components/Button';
 import axios from 'axios';
+import Loader from 'react-loader-spinner';
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 // import PropTypes from 'prop-types';
 // import { v4 as uuidv4 } from 'uuid';
 // import './styles.css';
@@ -18,6 +20,8 @@ class App extends Component {
         imageGallery: [],
         currentPage: 1,
         searchQuery: '',
+        isLoading: false,
+        error: null,
     };
 
     componentDidUpdate(prevProps, prevState) {
@@ -33,12 +37,15 @@ class App extends Component {
             searchQuery: inputValue,
             currentPage: 1,
             imageGallery: [],
+            error: null,
         });
     };
 
     fetchImages = () => {
         const { currentPage, searchQuery } = this.state;
         // const loadMoreBtn = document.querySelector('.loadMoreBtn");
+
+        this.setState({ isLoading: true });
 
         axios
             .get(
@@ -57,7 +64,9 @@ class App extends Component {
                     top: document.querySelector('.ImageGallery').scrollHeight,
                     behavior: 'smooth',
                 });
-            });
+            })
+            .catch(error => this.setState({ error: error }))
+            .finally(() => this.setState({ isLoading: false }));
     };
 
     toggleModal = () => {
@@ -67,7 +76,8 @@ class App extends Component {
     };
 
     render() {
-        const { showModal, imageGallery } = this.state;
+        const { showModal, imageGallery, isLoading, error } = this.state;
+        const shouldRenderLoadMoreBtn = imageGallery.length > 0 && !isLoading;
 
         return (
             <div className="App">
@@ -78,8 +88,27 @@ class App extends Component {
                         <p>Modal window</p>
                     </Modal>
                 )}
+
+                {error && (
+                    <h2 style={{ color: 'rgba(253, 29, 29, 1)' }}>
+                        Something went wrong. Please, try again!
+                    </h2>
+                )}
+
                 <ImageGallery gallery={imageGallery} />
-                {imageGallery.length > 0 && (
+
+                {isLoading && (
+                    <Loader
+                        className="Loader"
+                        type="MutatingDots"
+                        color="rgba(253, 29, 29, 1)"
+                        secondaryColor="rgba(252, 176, 69, 1)"
+                        height={100}
+                        width={100}
+                    />
+                )}
+
+                {shouldRenderLoadMoreBtn && (
                     <Button onClick={this.fetchImages} />
                 )}
             </div>
