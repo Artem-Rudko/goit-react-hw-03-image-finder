@@ -7,8 +7,7 @@ import axios from 'axios';
 import Loader from 'react-loader-spinner';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 // import PropTypes from 'prop-types';
-// import { v4 as uuidv4 } from 'uuid';
-// import './styles.css';
+import './styles.css';
 
 const BASE_URL = 'https://pixabay.com/api/';
 const LOG = '21433732-4f4ab4e06b98cffafd914747a';
@@ -16,7 +15,9 @@ const LOG = '21433732-4f4ab4e06b98cffafd914747a';
 class App extends Component {
     state = {
         input: '',
-        showModal: false,
+        // showModal: false,
+        currentImg: '',
+        tags: '',
         imageGallery: [],
         currentPage: 1,
         searchQuery: '',
@@ -43,7 +44,6 @@ class App extends Component {
 
     fetchImages = () => {
         const { currentPage, searchQuery } = this.state;
-        // const loadMoreBtn = document.querySelector('.loadMoreBtn");
 
         this.setState({ isLoading: true });
 
@@ -71,21 +71,25 @@ class App extends Component {
 
     toggleModal = () => {
         this.setState(state => ({
-            showModal: !state.showModal,
+            // showModal: !state.showModal,
+            currentImg: '',
         }));
     };
 
+    showCurrentImg = (url, tags) => {
+        this.setState({ currentImg: url, tags: tags });
+    };
+
     render() {
-        const { showModal, imageGallery, isLoading, error } = this.state;
+        const { currentImg, imageGallery, tags, isLoading, error } = this.state;
         const shouldRenderLoadMoreBtn = imageGallery.length > 0 && !isLoading;
 
         return (
             <div className="App">
                 <SearchBar onSubmit={this.inputSubmit} />
-                {showModal && (
+                {currentImg && (
                     <Modal onClose={this.toggleModal}>
-                        <img src="" alt="" />
-                        <p>Modal window</p>
+                        <img src={currentImg} alt={tags} />
                     </Modal>
                 )}
 
@@ -95,7 +99,10 @@ class App extends Component {
                     </h2>
                 )}
 
-                <ImageGallery gallery={imageGallery} />
+                <ImageGallery
+                    gallery={imageGallery}
+                    onImgClick={this.showCurrentImg}
+                />
 
                 {isLoading && (
                     <Loader
