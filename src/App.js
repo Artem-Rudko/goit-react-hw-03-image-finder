@@ -38,6 +38,7 @@ class App extends Component {
 
     fetchImages = () => {
         const { currentPage, searchQuery } = this.state;
+        // const loadMoreBtn = document.querySelector('.loadMoreBtn");
 
         axios
             .get(
@@ -51,6 +52,11 @@ class App extends Component {
                     ],
                     currentPage: prevState.currentPage + 1,
                 }));
+
+                window.scrollTo({
+                    top: document.querySelector('.ImageGallery').scrollHeight,
+                    behavior: 'smooth',
+                });
             });
     };
 
