@@ -13,10 +13,17 @@
 
 .Modal {
     width: 80%;
-    height: 80%;
+    /* height: 80%; */
     max-width: calc(100vw - 48px);
     max-height: calc(100vh - 24px);
     border-radius: 4px;
     text-align: center;
-    background-color: #fff;
+    /* background-color: #fff; */
+}
+
+.Modal img {
+    display: block;
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
 }
