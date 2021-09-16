@@ -3,14 +3,11 @@ import SearchBar from './components/SearchBar';
 import Modal from './components/Modal';
 import ImageGallery from './components/ImageGallery';
 import Button from './components/Button';
-import axios from 'axios';
+import { getImages } from '../src/services/images-api';
 import Loader from 'react-loader-spinner';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 // import PropTypes from 'prop-types';
 import './styles.css';
-
-const BASE_URL = 'https://pixabay.com/api/';
-const LOG = '21433732-4f4ab4e06b98cffafd914747a';
 
 class App extends Component {
     state = {
@@ -33,7 +30,6 @@ class App extends Component {
 
     inputSubmit = ({ inputValue }) => {
         // event.preventDefault();
-        console.log(inputValue);
         this.setState({
             searchQuery: inputValue,
             currentPage: 1,
@@ -47,10 +43,7 @@ class App extends Component {
 
         this.setState({ isLoading: true });
 
-        axios
-            .get(
-                `${BASE_URL}?q=${searchQuery}&page=${currentPage}&key=${LOG}&image_type=photo&orientation=horizontal&per_page=12`,
-            )
+        getImages(currentPage, searchQuery)
             .then(response => {
                 this.setState(prevState => ({
                     imageGallery: [
@@ -122,9 +115,5 @@ class App extends Component {
         );
     }
 }
-
-App.defaultProps = {};
-
-App.propTypes = {};
 
 export default App;

@@ -8,7 +8,6 @@ const modalRoot = document.querySelector('#modal-root');
 class Modal extends Component {
     componentDidMount() {
         window.addEventListener('keydown', this.handleKeyDown);
-        // window.addEventListener('click', (e) => {this.props.onClick()})
     }
 
     componentWillUnmount() {
@@ -26,10 +25,6 @@ class Modal extends Component {
             this.props.onClose();
         }
     };
-
-    // handleClick = (event) => {
-    //     if event
-    // }
 
     render() {
         return createPortal(
